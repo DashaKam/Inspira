@@ -10,7 +10,7 @@ public class ErrorResponseDto {
 
     private String message;
 
-    private ErrorType errorType;
+    private String errorType;
 
     private Object details;
 

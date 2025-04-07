@@ -30,9 +30,9 @@ const RegistrationScreen = ({ navigation }) => {
       const response = await axios.post(
         'http://localhost:8080/api/register',
         {
-          username,
-          nickname,
-          password,
+          name: username,
+          nickname: nickname,
+          password: password,
         }
       );
 
