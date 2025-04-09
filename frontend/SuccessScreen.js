@@ -1,31 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Button } from 'react-native';
 
-const SuccessScreen = () => {
+const SuccessScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Регистрация прошла успешно!</Text>
-      <Text style={styles.message}>Добро пожаловать в наше приложение!</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Успешный вход!</Text>
+      <Button title="Перейти на главную" onPress={() => navigation.navigate('HomeDrawer')} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  message: {
-    fontSize: 18,
-    textAlign: 'center',
-  },
-});
 
 export default SuccessScreen;
