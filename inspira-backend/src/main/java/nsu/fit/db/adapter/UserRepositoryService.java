@@ -22,6 +22,12 @@ public class UserRepositoryService implements UserRepositoryPort {
     }
 
     @Override
+    public User findById(int id) {
+        UserEntity userEntity = userRepository.findById(id);
+        return userEntityMapper.entityToUser(userEntity);
+    }
+
+    @Override
     public boolean existsByNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }

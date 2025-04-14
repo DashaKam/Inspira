@@ -3,6 +3,7 @@ package nsu.fit.domain.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nsu.fit.domain.model.LoginRequest;
+import nsu.fit.domain.model.MessageType;
 import nsu.fit.domain.model.RegistrationRequest;
 import nsu.fit.domain.model.User;
 import nsu.fit.domain.port.UserRepositoryPort;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+    private static final MessageType DEFAULT = MessageType.WISH;
 
     private final UserRepositoryPort userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -47,17 +49,7 @@ public class UserService {
         return JwtUtil.generateToken(String.valueOf(savedUser.getId()));
     }
 
-    private User buildUser(RegistrationRequest registrationRequest) {
-        String encodedPassword = bCryptPasswordEncoder.encode(registrationRequest.getPassword());
-
-        return User.builder()
-                .name(registrationRequest.getName())
-                .nickname(registrationRequest.getNickname())
-                .password(encodedPassword)
-                .build();
-    }
-
-    private User getUserByNickname(String nickname) {
+    public User getUserByNickname(String nickname) {
         User user = userRepository.findByNickname(nickname);
         if (user == null) {
             String errorMessage = "Пользователь с никнеймом %s не найден"
@@ -68,4 +60,25 @@ public class UserService {
         return user;
     }
 
+    public User getUserById(int id) {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            String errorMessage = "Пользователь с id %s не найден"
+                    .formatted(id);
+            log.error(errorMessage);
+            throw new ServiceException(errorMessage, ErrorType.USER_NOT_FOUND);
+        }
+        return user;
+    }
+
+    private User buildUser(RegistrationRequest registrationRequest) {
+        String encodedPassword = bCryptPasswordEncoder.encode(registrationRequest.getPassword());
+
+        return User.builder()
+                .name(registrationRequest.getName())
+                .nickname(registrationRequest.getNickname())
+                .password(encodedPassword)
+                .messageType(DEFAULT)
+                .build();
+    }
 }

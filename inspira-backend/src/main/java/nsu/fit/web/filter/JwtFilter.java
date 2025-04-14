@@ -8,7 +8,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nsu.fit.domain.model.User;
+import nsu.fit.domain.service.UserService;
 import nsu.fit.exception.AuthException;
 import nsu.fit.util.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -23,9 +26,11 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
+
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -45,7 +50,12 @@ public class JwtFilter extends OncePerRequestFilter {
             String id = JwtUtil.extractId(token);
             request.setAttribute("id", id);
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(id, null,
+            User user = userService.getUserById(Integer.parseInt(id));
+
+            //Authentication auth = new UsernamePasswordAuthenticationToken(id, null,
+                    //List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+            Authentication auth = new UsernamePasswordAuthenticationToken(user, null,
                     List.of(new SimpleGrantedAuthority("ROLE_USER")));
             SecurityContextHolder.getContext().setAuthentication(auth);
 
