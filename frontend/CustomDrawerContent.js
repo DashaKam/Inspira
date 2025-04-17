@@ -30,7 +30,7 @@ const CustomDrawerContent = (props) => {
         </TouchableOpacity>
         
         <TouchableOpacity 
-          onPress={() => props.navigation.navigate('Settings')}
+          onPress={() => props.navigation.navigate('Wish')}
           style={styles.button}
         >
           <Icon name="settings-outline" size={20} color="#000" style={styles.icon} />
