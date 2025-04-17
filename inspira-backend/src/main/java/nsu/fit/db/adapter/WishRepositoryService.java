@@ -20,4 +20,21 @@ public class WishRepositoryService implements WishRepositoryPort {
         WishEntity wishToSave = wishEntityMapper.wishToEntity(wish);
         return wishEntityMapper.entityToWish(wishRepository.save(wishToSave));
     }
+
+    @Override
+    public Wish findFirstByReceiverId(int receiverId) {
+        WishEntity wishEntity = wishRepository.findFirstByReceiverId(receiverId);
+        return wishEntityMapper.entityToWish(wishEntity);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        wishRepository.deleteById(id);
+    }
+
+    @Override
+    public Wish findFirstByReceiverIdIsNullAndSenderIdNot(int senderId) {
+        WishEntity wishEntity = wishRepository.findFirstByReceiverIdIsNullAndSenderIdNot(senderId);
+        return wishEntityMapper.entityToWish(wishEntity);
+    }
 }

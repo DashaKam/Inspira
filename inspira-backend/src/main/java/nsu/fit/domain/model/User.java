@@ -17,5 +17,4 @@ public class User implements Principal {
 
     private String password;
 
-    private MessageType messageType;
 }

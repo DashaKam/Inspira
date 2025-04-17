@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import nsu.fit.domain.model.LoginRequest;
 import nsu.fit.domain.model.MessageType;
 import nsu.fit.domain.model.RegistrationRequest;
+import nsu.fit.domain.model.Settings;
 import nsu.fit.domain.model.User;
+import nsu.fit.domain.port.SettingsRepositoryPort;
 import nsu.fit.domain.port.UserRepositoryPort;
 import nsu.fit.exception.AuthException;
 import nsu.fit.exception.ErrorType;
@@ -18,9 +20,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
-    private static final MessageType DEFAULT = MessageType.WISH;
 
     private final UserRepositoryPort userRepository;
+    private final SettingsService settingsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public String loginUser(LoginRequest loginRequest) {
@@ -45,6 +47,7 @@ public class UserService {
         }
 
         User savedUser = userRepository.save(buildUser(registrationRequest));
+        settingsService.createDefaultSettings(savedUser.getId());
 
         return JwtUtil.generateToken(String.valueOf(savedUser.getId()));
     }
@@ -78,7 +81,6 @@ public class UserService {
                 .name(registrationRequest.getName())
                 .nickname(registrationRequest.getNickname())
                 .password(encodedPassword)
-                .messageType(DEFAULT)
                 .build();
     }
 }

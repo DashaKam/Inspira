@@ -14,4 +14,6 @@ public class Wish {
     private Integer receiverId;
 
     private String message;
+
+    private Boolean anonymous;
 }

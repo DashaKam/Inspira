@@ -30,9 +30,4 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "message_type")
-    @Enumerated(EnumType.STRING)
-    private MessageTypeDb messageType;
-
 }

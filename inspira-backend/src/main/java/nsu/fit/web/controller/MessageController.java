@@ -1,11 +1,14 @@
 package nsu.fit.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import nsu.fit.domain.model.Message;
 import nsu.fit.domain.model.User;
 import nsu.fit.domain.model.WishRequest;
 import nsu.fit.domain.service.MessageService;
+import nsu.fit.web.dto.MessageResponseDto;
 import nsu.fit.web.dto.WishRequestDto;
 import nsu.fit.web.dto.WishResponseDto;
+import nsu.fit.web.mapper.MessageDtoMapper;
 import nsu.fit.web.mapper.WishDtoMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,11 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class MessageController {
+
     private final MessageService messageService;
     private final WishDtoMapper wishDtoMapper;
-    @GetMapping("/message")
-    public void getMessage() {
+    private final MessageDtoMapper messageDtoMapper;
 
+    @GetMapping("/message")
+    public MessageResponseDto getMessage() {
+        Message message = messageService.getMessage();
+        return messageDtoMapper.messageToDto(message);
     }
 
     @PostMapping("/send-wish")

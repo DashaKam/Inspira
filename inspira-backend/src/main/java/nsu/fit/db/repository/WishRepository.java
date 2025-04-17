@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishRepository extends JpaRepository<WishEntity, Integer> {
+
+    WishEntity findFirstByReceiverId(int receiverId);
+    WishEntity findFirstByReceiverIdIsNullAndSenderIdNot(int senderId);
 }
