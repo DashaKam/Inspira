@@ -6,6 +6,8 @@ public interface UserRepositoryPort {
 
     User findByNickname(String nickname);
 
+    User findById(int id);
+
     boolean existsByNickname(String nickname);
 
     User save(User user);
