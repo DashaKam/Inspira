@@ -2,7 +2,6 @@ package nsu.fit.web.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nsu.fit.db.repository.UserRepository;
 import nsu.fit.domain.model.LoginRequest;
 import nsu.fit.domain.model.RegistrationRequest;
 import nsu.fit.domain.service.UserService;
@@ -10,7 +9,6 @@ import nsu.fit.web.dto.AuthResponseDto;
 import nsu.fit.web.dto.LoginRequestDto;
 import nsu.fit.web.dto.RegistrationRequestDto;
 import nsu.fit.web.mapper.AuthDtoMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,20 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { Text, SafeAreaView, StyleSheet, TextInput, Alert, ImageBackground, View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import axios from 'axios'; 
 
 const LoginScreen = ({ navigation }) => {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-  const handleSubmit = () => {
-    if (!nickname || !password) {
-      Alert.alert('Ошибка', 'Пожалуйста, заполните все поля.');
-      return;
+  const handleSubmit = async () => {
+  if (!nickname || !password) {
+    Alert.alert('Ошибка', 'Пожалуйста, заполните все поля.');
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      'http://185.157.214.169:8080/api/login', // URL для входа
+      {
+        nickname: nickname,
+        password: password,
+      }
+    );
+
+    // Проверка статуса ответа
+    if (response.status !== 200) {
+      throw new Error('Ошибка входа');
     }
-    console.log('Вход успешен:', { nickname, password });
-    Alert.alert('Успех', 'Вы успешно вошли!');
-    // Здесь нужно добавить логику для перенаправления пользователя или отправки данных на сервер
-  };
+
+    const data = response.data; // Получаем данные из ответа
+    console.log('Вход успешен:', data);
+ 
+    
+    navigation.navigate('HomeDrawer'); 
+
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response; // Извлекаем данные из ответа
+
+      // Проверяем наличие ошибок валидации
+      if (data.details && Array.isArray(data.details)) {
+        const errorMessages = data.details.map(detail => 
+          `${detail.path}: ${detail.message}`
+        ).join('\n');
+        Alert.alert('Ошибка валидации', errorMessages);
+      } else if (data.errorType === 'USER_NOT_FOUND') { // Проверка на существование пользователя
+        Alert.alert('Ошибка', 'Пользователь с таким никнеймом не найден.');
+      } else if (data.errorType === 'INVALID_PASSWORD') { // Проверка на неверный пароль
+        Alert.alert('Ошибка', 'Неверный пароль. Попробуйте еще раз.');
+      } else {
+        Alert.alert(
+          'Ошибка',
+          data.message || 'Не удалось войти. Попробуйте еще раз.'
+        );
+      }
+    } else {
+      Alert.alert(
+        'Ошибка',
+        'Не удалось войти. Попробуйте еще раз.'
+      );
+    }
+  }
+};
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -41,14 +87,13 @@ const LoginScreen = ({ navigation }) => {
         keyboardVerticalOffset={keyboardVisible ? 100 : 0} // Увеличьте отступ, когда клавиатура видима
       >
         <View style={styles.formContainer}>
-          <Text style={styles.title}>Привет! 
-          Мы скучали, скорее заходи :)</Text>
+          <Text style={styles.title}>Привет! Мы скучали, скорее заходи :)</Text>
           
           <TextInput
             style={styles.input}
             placeholder="Твой никнейм"
             value={nickname}
-            onChangeText={setNickname} //функцию потом поменяй на чек никнейм
+            onChangeText={setNickname}
             placeholderTextColor="#CE9FDD"
           />
           <TextInput
@@ -83,12 +128,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    marginTop: 20, 
   },
   formContainer: {
     flex: 1,
     justifyContent: 'flex-start', 
     alignItems: 'center',
-    marginTop: 50, // Добавлен отступ сверху для поднятия формы
+    marginTop: 20,
   },
   title: {
     fontSize: 40,
@@ -124,17 +170,17 @@ const styles = StyleSheet.create({
   linkContainer: {
     flexDirection: 'row', 
     justifyContent: 'center', 
-    marginTop: 15, // Отступ сверху для ссылки
+    marginTop: 15,
   },
   linkText: {
-    color: '#937EC3', // Цвет текста
-    fontSize: 16,
-  },
-  link: {
-    color: '#4D3FB7', // Цвет ссылки
-    fontSize: 16,
-    textDecorationLine: 'underline', // Подчеркивание ссылки
-  },
+   color:'#937EC3',
+   fontSize :16,
+},
+link:{
+   color:'#4D3FB7',
+   fontSize :16,
+   textDecorationLine:'underline'
+},
 });
 
 export default LoginScreen;

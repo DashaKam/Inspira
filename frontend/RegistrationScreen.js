@@ -23,12 +23,12 @@ const RegistrationScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     if (!username || !nickname || !password) {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля.');
-      return;
+      return;  
     }
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/register',
+        'http://185.157.214.169:8080/api/register',
         {
           name: username,
           nickname: nickname,
@@ -38,13 +38,42 @@ const RegistrationScreen = ({ navigation }) => {
 
       console.log('Регистрация успешна:', response.data);
       Alert.alert('Успех', 'Вы успешно зарегистрированы!');
-      navigation.navigate('Success'); //добавь норм перенаправление куда-нибудь
+      navigation.navigate('HomeDrawer'); // Перенаправление на экран успеха
     } catch (error) {
       console.error('Ошибка регистрации:', error);
-      Alert.alert(
-        'Ошибка',
-        'Не удалось зарегистрироваться. Попробуйте еще раз.'
-      );
+   
+      if (error.response) {
+        const { data } = error.response; // Извлекаем данные из ответа
+
+        // Проверяем наличие ошибок валидации
+        if (data.details && Array.isArray(data.details)) {
+          const errorMessages = data.details.map(detail => {
+            switch (detail.path) {
+              case 'nickname':
+                return `Никнейм должен содержать от 4 до 20 символов. И включать в себя только буквы и цифры`;
+              case 'password':
+                return `Пароль должен содержать не менее 8 символов и включать буквы и цифры.`;
+              case 'name':
+                return `Имя не должно быть пустым.`;
+              default:
+                return `Пожалуйста, проверьте поле ${detail.path}.`;
+            }
+          }).join('\n');
+          Alert.alert('Ошибка валидации', `Пожалуйста, исправьте следующие ошибки:\n\n${errorMessages}`);
+        } else if (data.errorType === 'USER_NICKNAME_OCCUPIED') {
+          Alert.alert('Ошибка', 'Этот никнейм уже занят. Пожалуйста, выберите другой.');
+        } else {
+          Alert.alert(
+            'Ошибка',
+            data.message || 'Что-то пошло не так. Пожалуйста, попробуйте еще раз позже.'
+          );
+        }
+      } else {
+        Alert.alert(
+          'Ошибка',
+          'Не удалось зарегистрироваться. Пожалуйста, проверьте ваше интернет-соединение и попробуйте снова.'
+        );
+      }
     }
   };
 
@@ -121,16 +150,18 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     justifyContent: 'center',
+    
   },
   container: {
     flex: 1,
     padding: 16,
+    marginTop: 20, 
   },
   formContainer: {
     flex: 1,
     justifyContent: 'flex-start', // Изменено на flex-start, чтобы элементы были вверху
     alignItems: 'center',
-    marginTop: 50, // Добавлен отступ сверху для поднятия формы
+    marginTop: 20, // Добавлен отступ сверху для поднятия формы
   },
   title: {
     fontSize: 40,
@@ -156,27 +187,27 @@ const styles = StyleSheet.create({
     width: '80%',
     borderRadius: 20,
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#645BAA',
-    fontSize: 25,
-  },
-  linkContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 15, // Отступ сверху для ссылки
-  },
-  linkText: {
-    color: '#937EC3', // Цвет текста
-    fontSize: 16,
-  },
-  link: {
-    color: '#4D3FB7', // Цвет ссылки
-    fontSize: 16,
-    textDecorationLine: 'underline', // Подчеркивание ссылки
-  },
+    paddingHorizontal:20 ,
+     alignItems:'center' ,
+   },
+   buttonText:{
+     color:'#645BAA' ,
+     fontSize :25 ,
+   },
+   linkContainer:{
+     flexDirection:'row' ,
+     justifyContent:'center' ,
+     marginTop :15 , // Отступ сверху для ссылки 
+   },
+   linkText:{
+     color:'#937EC3', // Цвет текста 
+     fontSize :16 ,
+   },
+   link:{
+     color:'#4D3FB7', // Цвет ссылки 
+     fontSize :16 ,
+     textDecorationLine:'underline' , // Подчеркивание ссылки 
+   },
 });
 
 export default RegistrationScreen;
