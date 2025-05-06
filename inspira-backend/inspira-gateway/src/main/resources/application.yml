@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+logging:
+    level:
+      org.springframework.cloud.gateway: DEBUG
+      reactor.netty.http.client: DEBUG
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - name: JwtAuthFilter
+          args:
+            ignoredPaths:
+              - /api/users/login
+              - /api/users/register
+      routes:
+        - id: user-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/users/**
+        - id: message-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/messages/**
+        - id: llm-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/llm/**
