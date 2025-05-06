@@ -3,7 +3,7 @@ version: '3.3'
 services:
   postgres:
     build: .
-    container_name: postgres-with-logs
+    container_name: postgres-with-logs-inspira
     command: ["postgres", "-c", "log_statement=all"]
     ports:
       - "5432:5432"
