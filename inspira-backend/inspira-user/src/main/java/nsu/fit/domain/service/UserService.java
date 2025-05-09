@@ -2,8 +2,11 @@ package nsu.fit.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nsu.fit.config.ContextProvider;
 import nsu.fit.domain.model.LoginRequest;
 import nsu.fit.domain.model.RegistrationRequest;
+import nsu.fit.domain.model.SetNicknameRequest;
+import nsu.fit.domain.model.SetPasswordRequest;
 import nsu.fit.domain.model.User;
 import nsu.fit.domain.model.UserSearchFilter;
 import nsu.fit.domain.port.UserRepositoryPort;
@@ -11,6 +14,7 @@ import nsu.fit.exception.AuthException;
 import nsu.fit.exception.ErrorType;
 import nsu.fit.exception.ServiceException;
 import nsu.fit.util.JwtUtil;
+import org.mapstruct.control.MappingControl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,7 @@ public class UserService {
     private final UserRepositoryPort userRepository;
     private final SettingsService settingsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ContextProvider contextProvider;
 
     public String loginUser(LoginRequest loginRequest) {
         User user = getUserByNickname(loginRequest.getNickname());
@@ -61,6 +66,18 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public void setNickname(SetNicknameRequest setNicknameRequest) {
+        User user = userRepository.findById(contextProvider.getUserId());
+        user.setNickname(setNicknameRequest.getNickname());
+        userRepository.save(user);
+    }
+
+    public void setPassword(SetPasswordRequest setPasswordRequest) {
+        User user = userRepository.findById(contextProvider.getUserId());
+        user.setPassword(bCryptPasswordEncoder.encode(setPasswordRequest.getPassword()));
+        userRepository.save(user);
     }
 
     public User getUserByNickname(String nickname) {
