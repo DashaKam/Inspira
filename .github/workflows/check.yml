@@ -1,0 +1,66 @@
+name: CI/CD for React Native & Java Backend
+
+on:
+  # Запускаем при push
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  # ---------- Frontend ----------
+  frontend-ci:
+    name: Frontend CI (React Native)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Клонируем репозиторий на виртуальную машину GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Устанавливаем Node.js для React Native
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Устанавливаются зависимости, указанные в package.json
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Jest tests
+        run: npm test
+
+  # ---------- Backend ----------
+  backend-ci:
+    name: Backend CI (Java + Postgres)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin_pass
+          POSTGRES_DB: inspira_db
+        ports:
+          - 5432:5432
+
+    steps:
+      # Клонируем репозиторий на виртуальную машину GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Grant execute permission to Gradle
+        run: chmod +x gradlew
+
+      - name: Run tests
+        run: ./gradlew test
