@@ -77,5 +77,4 @@ public class UserController {
                 setPasswordRequestDtoMapper.dtoToSetPasswordRequest(setPasswordRequestDto);
         userService.setPassword(setPasswordRequest);
     }
-
 }

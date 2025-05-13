@@ -91,6 +91,16 @@ public class UserService {
         return user;
     }
 
+    public User getUserById(int id) {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            String errorMessage = "Пользователь с id %d не найден".formatted(id);
+            log.error(errorMessage);
+            throw new ServiceException(errorMessage, ErrorType.USER_NOT_FOUND);
+        }
+        return user;
+    }
+
     private User buildUser(RegistrationRequest registrationRequest) {
         String encodedPassword = bCryptPasswordEncoder.encode(registrationRequest.getPassword());
 
