@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nsu.fit.domain.service.FriendService;
 import nsu.fit.web.dto.UiFriendRequestDto;
-import nsu.fit.web.dto.FriendDto;
-import nsu.fit.web.mapper.FriendDtoMapper;
+import nsu.fit.web.dto.UiUserDto;
+import nsu.fit.web.mapper.UiUserDtoMapper;
 import nsu.fit.web.mapper.UiFriendRequestDtoMapper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,7 @@ public class FriendController {
     private final FriendService friendService;
 
     private final UiFriendRequestDtoMapper uiFriendRequestDtoMapper;
-    private final FriendDtoMapper friendDtoMapper;
+    private final UiUserDtoMapper uiUserDtoMapper;
 
     @PostMapping("/send-friend-request")
     public void sendFriendRequest(@RequestBody @Valid UiFriendRequestDto uiFriendRequestDto) {
@@ -43,8 +43,8 @@ public class FriendController {
     }
 
     @GetMapping("/friendlist")
-    public List<FriendDto> getFriendlist() {
-       return friendDtoMapper.friendListToFriendDtoList(friendService.getFriendList());
+    public List<UiUserDto> getFriendlist() {
+       return uiUserDtoMapper.friendListToFriendDtoList(friendService.getFriendList());
     }
 
     @GetMapping("/friend-requests-list")

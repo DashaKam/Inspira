@@ -3,7 +3,7 @@ package nsu.fit.web.dto;
 import lombok.Data;
 
 @Data
-public class FriendDto {
+public class UiUserDto {
 
     private String nickname;
 

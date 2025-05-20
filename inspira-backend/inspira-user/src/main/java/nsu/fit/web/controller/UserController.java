@@ -13,6 +13,7 @@ import nsu.fit.web.dto.LoginRequestDto;
 import nsu.fit.web.dto.RegistrationRequestDto;
 import nsu.fit.web.dto.SetNicknameRequestDto;
 import nsu.fit.web.dto.SetPasswordRequestDto;
+import nsu.fit.web.dto.UiUserDto;
 import nsu.fit.web.dto.UserDto;
 import nsu.fit.web.dto.UserSearchFilterDto;
 import nsu.fit.web.mapper.AuthDtoMapper;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -77,4 +80,9 @@ public class UserController {
                 setPasswordRequestDtoMapper.dtoToSetPasswordRequest(setPasswordRequestDto);
         userService.setPassword(setPasswordRequest);
     }
+
+//    @GetMapping("/userlist")
+//    public List<UiUserDto> getUserList() {
+//
+//    }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Friend {
+public class UiUser {
 
     private String nickname;
 

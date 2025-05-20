@@ -3,7 +3,7 @@ package nsu.fit.domain.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nsu.fit.config.ContextProvider;
-import nsu.fit.domain.model.Friend;
+import nsu.fit.domain.model.UiUser;
 import nsu.fit.domain.model.FriendRequest;
 import nsu.fit.domain.model.Friendship;
 import nsu.fit.domain.model.UiFriendRequest;
@@ -75,7 +75,7 @@ public class FriendService {
         friendshipRepository.save(friendship);
     }
 
-    public List<Friend> getFriendList() {
+    public List<UiUser> getFriendList() {
         List<Friendship> friendships = friendshipRepository.findByFstUserIdOrSndUserId(contextProvider.getUserId());
         return friendshipsToFriends(friendships);
     }
@@ -101,16 +101,16 @@ public class FriendService {
         return friendRequest;
     }
 
-    private List<Friend> friendshipsToFriends(List<Friendship> friendships) {
-        List<Friend> friends = new ArrayList<>();
+    private List<UiUser> friendshipsToFriends(List<Friendship> friendships) {
+        List<UiUser> uiUsers = new ArrayList<>();
         int userId = contextProvider.getUserId();
 
         for (Friendship friendship : friendships) {
             String friendNickname = userService.getUserById(getFriendIdFromFriendship(friendship, userId)).getNickname();
-            friends.add(Friend.builder().nickname(friendNickname).build());
+            uiUsers.add(UiUser.builder().nickname(friendNickname).build());
         }
 
-        return friends;
+        return uiUsers;
     }
 
     private List<UiFriendRequest> friendRequestToUiFriendRequests(List<FriendRequest> friendRequests) {
