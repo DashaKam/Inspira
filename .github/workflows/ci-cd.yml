@@ -1,0 +1,47 @@
+name: CI/CD for React Native & JavaScript Backend
+
+on:
+  # Запускаем при push
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  # ---------- Frontend & Backend Tests ----------
+  ci:
+    name: CI (React Native & Backend)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin_pass
+          POSTGRES_DB: inspira_db
+        ports:
+          - 5432:5432
+
+    steps:
+      # Клонируем репозиторий на виртуальную машину GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Устанавливаем Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Устанавливаем зависимости, указанные в package.json
+      - name: Install dependencies
+        run: npm install
+
+      # Запускаем линтер для проверки качества кода
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+
+      # Запускаем все тесты (frontend и backend) с помощью Jest
+      - name: Run Jest tests
+        run: npm test
