@@ -42,6 +42,62 @@ jobs:
         run: npm run lint
         continue-on-error: true
 
-      # Запускаем все тесты (frontend и backend) с помощью Jest
+      # Запускаем все тесты (inspira-frontend и backend) с помощью Jest
       - name: Run Jest tests
         run: npm test
+
+  # ---------- Continuous Deployment ----------
+  # CD (Continuous Deployment) автоматически деплоит приложение после успешного прохождения тестов
+  # Для работы CD используются следующие секреты в репозитории:
+  # - EXPO_USERNAME: имя пользователя Expo
+  # - EXPO_PASSWORD: пароль пользователя Expo
+  # - SERVER_HOST: хост сервера для деплоя бэкенда
+  # - SERVER_USERNAME: имя пользователя на сервере
+  # - SERVER_SSH_KEY: SSH-ключ для доступа к серверу
+  cd:
+    name: CD (Deploy to Production)
+    needs: ci  # Запускаем только после успешного выполнения CI
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') # Деплоим только из main и release/* веток
+
+    steps:
+      # Клонируем репозиторий на виртуальную машину GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Устанавливаем Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Устанавливаем зависимости, указанные в package.json
+      - name: Install dependencies
+        run: npm install
+
+      # Устанавливаем Expo CLI глобально
+      - name: Install Expo CLI
+        run: npm install -g expo-cli eas-cli
+
+      # Логинимся в Expo
+      - name: Login to Expo
+        run: expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+
+      # Сборка и публикация приложения на Expo
+      - name: Build and publish to Expo
+        run: |
+          cd frontend
+          expo publish --release-channel production
+
+      # Деплой бэкенда на сервер
+      - name: Deploy backend to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /path/to/inspira-backend
+            git pull
+            npm install
+            pm2 restart inspira-backend
