@@ -69,7 +69,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
 
       # Устанавливаем зависимости, указанные в package.json
       - name: Install dependencies
@@ -86,7 +86,6 @@ jobs:
       # Сборка и публикация приложения на Expo
       - name: Build and publish to Expo
         run: |
-          cd frontend
           expo publish --release-channel production
 
       # Деплой бэкенда на сервер
