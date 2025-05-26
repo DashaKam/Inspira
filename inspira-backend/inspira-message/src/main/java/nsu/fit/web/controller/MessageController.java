@@ -1,5 +1,6 @@
 package nsu.fit.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import nsu.fit.domain.model.Message;
 import nsu.fit.domain.model.WishRequest;
@@ -32,12 +33,23 @@ public class MessageController {
     private final WishResponseDtoMapper wishResponseDtoMapper;
 
     @GetMapping("/message")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Получение сообщения",
+            description = "Получение сообщения: мотивационной цитаты (сгенерированной нейросетью) или пожелания " +
+                    "(отправленного другим пользователем или сгенерированного нейросетью)"
+    )
     public MessageResponseDto getMessage() {
         Message message = messageService.getMessage();
         return messageDtoMapper.messageToDto(message);
     }
 
     @PostMapping("/send-wish")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Отправление пожелания",
+            description = "Отправление пожелания другому пользователю"
+    )
     public WishResponseDto sendWish(@RequestBody WishRequestDto wishRequestDto) {
         WishRequest wishRequest = wishDtoMapper.dtoToWishRequest(wishRequestDto);
         return wishResponseDtoMapper.moderateWishResponseToDto(messageService.createWish(wishRequest));

@@ -1,5 +1,6 @@
 package nsu.fit.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nsu.fit.domain.model.LoginRequest;
@@ -13,7 +14,6 @@ import nsu.fit.web.dto.LoginRequestDto;
 import nsu.fit.web.dto.RegistrationRequestDto;
 import nsu.fit.web.dto.SetNicknameRequestDto;
 import nsu.fit.web.dto.SetPasswordRequestDto;
-import nsu.fit.web.dto.UiUserDto;
 import nsu.fit.web.dto.UserDto;
 import nsu.fit.web.dto.UserSearchFilterDto;
 import nsu.fit.web.mapper.AuthDtoMapper;
@@ -28,8 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -46,6 +44,10 @@ public class UserController {
     private final SetPasswordRequestDtoMapper setPasswordRequestDtoMapper;
 
     @PostMapping("/register")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Регистрация нового пользователя"
+    )
     public AuthResponseDto register(@RequestBody @Valid RegistrationRequestDto registrationRequestDto) {
         RegistrationRequest registrationRequest = authDtoMapper.dtoToRegistrationRequest(registrationRequestDto);
         String token = userService.registerUser(registrationRequest);
@@ -53,6 +55,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Авторизация в системе"
+    )
     public AuthResponseDto login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         LoginRequest loginRequest = authDtoMapper.dtoToLoginRequest(loginRequestDto);
         String token = userService.loginUser(loginRequest);
@@ -60,6 +66,11 @@ public class UserController {
     }
 
     @GetMapping("/search")
+    @Operation(
+            tags = "Внутренние API",
+            summary = "Поиск пользователя в системе",
+            description = "Поиск пользователя по его никнейму и / или id"
+    )
     public UserDto searchUser(@ModelAttribute UserSearchFilterDto userSearchFilterDto) {
         User user = userService
                 .getUserBySearchFilter(userSearchFilterDtoMapper.dtoToUserSearchFilter(userSearchFilterDto));
@@ -68,6 +79,10 @@ public class UserController {
     }
 
     @PostMapping("/set-nickname")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Изменение никнейма пользователя"
+    )
     public void setNickname(@RequestBody @Valid SetNicknameRequestDto setNicknameRequestDto) {
         SetNicknameRequest setNicknameRequest =
                 setNicknameRequestDtoMapper.dtoToSetNicknameRequest(setNicknameRequestDto);
@@ -75,14 +90,13 @@ public class UserController {
     }
 
     @PostMapping("/set-password")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Изменение пароля пользователя"
+    )
     public void setPassword(@RequestBody @Valid SetPasswordRequestDto setPasswordRequestDto) {
         SetPasswordRequest setPasswordRequest =
                 setPasswordRequestDtoMapper.dtoToSetPasswordRequest(setPasswordRequestDto);
         userService.setPassword(setPasswordRequest);
     }
-
-//    @GetMapping("/userlist")
-//    public List<UiUserDto> getUserList() {
-//
-//    }
 }

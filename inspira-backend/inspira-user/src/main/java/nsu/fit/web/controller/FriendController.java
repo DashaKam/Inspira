@@ -1,5 +1,6 @@
 package nsu.fit.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nsu.fit.domain.service.FriendService;
@@ -28,26 +29,48 @@ public class FriendController {
     private final UiUserDtoMapper uiUserDtoMapper;
 
     @PostMapping("/send-friend-request")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Отправление запроса на добавление в друзья"
+    )
     public void sendFriendRequest(@RequestBody @Valid UiFriendRequestDto uiFriendRequestDto) {
         friendService.saveFriendRequest(uiFriendRequestDtoMapper.dtoToUiFriendRequest(uiFriendRequestDto));
     }
 
     @PostMapping("/accept-request")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Принятие запроса на добавление в друзья"
+    )
     public void acceptFriendRequest(@RequestBody @Valid UiFriendRequestDto uiFriendRequestDto) {
         friendService.acceptFriendRequest(uiFriendRequestDtoMapper.dtoToUiFriendRequest(uiFriendRequestDto));
     }
 
     @PostMapping("/decline-request")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Отклонение запроса на добавление в друзья"
+    )
     public void declineFriendRequest(@RequestBody @Valid UiFriendRequestDto uiFriendRequestDto) {
         friendService.declineFriendRequest(uiFriendRequestDtoMapper.dtoToUiFriendRequest(uiFriendRequestDto));
     }
 
     @GetMapping("/friendlist")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Получение списка друзей",
+            description = "Получение списка друзей текущего пользователя"
+    )
     public List<UiUserDto> getFriendlist() {
        return uiUserDtoMapper.friendListToFriendDtoList(friendService.getFriendList());
     }
 
     @GetMapping("/friend-requests-list")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Получение списка запросов на добавление в друзья",
+            description = "Получение списка запросов на добавление в друзья, отправленных текущему пользователю"
+    )
     public List<UiFriendRequestDto> getFriendRequestsList() {
         return uiFriendRequestDtoMapper.uiFriendRequestListToDtoList(friendService.getFriendRequestsList());
     }

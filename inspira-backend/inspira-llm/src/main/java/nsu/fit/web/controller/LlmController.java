@@ -1,5 +1,6 @@
 package nsu.fit.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import nsu.fit.domain.model.Message;
 import nsu.fit.domain.model.ModerateWishRequest;
@@ -32,6 +33,11 @@ public class LlmController {
     private final MessageDtoMapper messageDtoMapper;
 
     @PostMapping("/moderate-wish")
+    @Operation(
+            tags = "Внутренние API",
+            summary = "Модерация пожелания",
+            description = "Фильтрация пожеланий с целью выявления ненормативной лексики и негативного тона"
+    )
     public ModerateWishResponseDto moderateWish(@RequestBody ModerateWishRequestDto moderateWishRequestDto) {
         ModerateWishRequest moderateWishRequest = moderateWishRequestDtoMapper
                 .dtoToModerateWishRequest(moderateWishRequestDto);
@@ -40,6 +46,11 @@ public class LlmController {
     }
 
     @PostMapping("/generate-message")
+    @Operation(
+            tags = "Внутренние API",
+            summary = "Генерация сообщения",
+            description = "Генерация пожелания / мотивационной цитаты"
+    )
     public MessageDto generateMessage(@RequestBody MessageTypeDto messageTypeDto) {
         Message message = llmService.getMessage(messageTypeDtoMapper.dtoToMessageType(messageTypeDto));
         return messageDtoMapper.messageToDto(message);

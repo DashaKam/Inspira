@@ -1,5 +1,6 @@
 package nsu.fit.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nsu.fit.domain.model.ChangeMessageTypeRequest;
@@ -26,6 +27,10 @@ public class SettingsController {
     private final MessageTypeDtoMapper messageTypeDtoMapper;
 
     @PostMapping("/change-message-type")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Изменение типа получаемых сообщений"
+    )
     public void changeMessageType(@RequestBody @Valid ChangeMessageTypeRequestDto changeMessageTypeRequestDto) {
         ChangeMessageTypeRequest changeMessageTypeRequest =
                 changeMessageTypeDtoMapper.dtoToChangeMessageTypeRequest(changeMessageTypeRequestDto);
@@ -33,6 +38,10 @@ public class SettingsController {
     }
 
     @GetMapping("/message-type")
+    @Operation(
+            tags = "Внутренние API",
+            summary = "Получение типа сообщений, предпочитаемых пользователем"
+    )
     public MessageTypeDto getMessageType() {
         MessageType messageType = settingsService.getMessageType();
         return messageTypeDtoMapper.messageTypeToDto(messageType);

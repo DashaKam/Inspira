@@ -1,10 +1,9 @@
-version: '3.3'
-
 services:
   postgres:
-    build: .
-    container_name: postgres-with-logs-inspira
-    command: ["postgres", "-c", "log_statement=all"]
+    build: ..
+    container_name: inspira-postgres-local
+    command: [ "postgres", "-c", "log_statement=all" ]
+    image: inspira-postgres:latest
     ports:
       - "5432:5432"
     environment:

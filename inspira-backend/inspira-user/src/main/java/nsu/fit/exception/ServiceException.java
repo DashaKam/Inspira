@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ServiceException extends RuntimeException {
 
-    private ErrorType errorType;
+    private final ErrorType errorType;
 
     public ServiceException(String message, ErrorType errorType) {
         super(message);

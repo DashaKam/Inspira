@@ -45,7 +45,6 @@ public class LlmService {
     }
 
     private CompletableFuture<Boolean> isCleanLanguage(String wish) {
-//        return CompletableFuture.supplyAsync(() -> toxicityClassifierService.isCleanLanguage(wish));
-        return CompletableFuture.supplyAsync(() -> Boolean.TRUE);
+        return CompletableFuture.supplyAsync(() -> toxicityClassifierService.isCleanLanguage(wish));
     }
 }
