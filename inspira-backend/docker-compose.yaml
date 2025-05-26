@@ -1,0 +1,123 @@
+services:
+  postgres:
+    build:
+      context: ./db
+    container_name: inspira-postgres
+    command: [ "postgres", "-c", "log_statement=all" ]
+    image: inspira-postgres:latest
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin_pass
+      POSTGRES_DB: inspira_db
+    restart: always
+
+  gateway:
+    build:
+      context: ./inspira-gateway
+      dockerfile: Dockerfile
+    image: inspira-gateway:latest
+    container_name: inspira-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      logstash:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  user:
+    build:
+      context: ./inspira-user
+      dockerfile: Dockerfile
+    image: inspira-user:latest
+    container_name: inspira-user
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8081:8081"
+    depends_on:
+      logstash:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    networks:
+      - app-network
+
+  llm:
+    build:
+      context: ./inspira-llm
+      dockerfile: Dockerfile
+    image: inspira-llm:latest
+    container_name: inspira-llm
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    depends_on:
+      logstash:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  message:
+    build:
+      context: ./inspira-message
+      dockerfile: Dockerfile
+    image: inspira-message:latest
+    container_name: inspira-message
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    depends_on:
+      logstash:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    networks:
+      - app-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+    networks:
+      - app-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9600" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    ports:
+      - "5601:5601"
+    networks:
+      - app-network
+    depends_on:
+      - elasticsearch
+
+networks:
+  app-network:
+    driver: bridge
+

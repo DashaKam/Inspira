@@ -18,6 +18,4 @@ public interface FriendshipEntityMapper {
 
     List<Friendship> entitiesToFriendships(List<FriendshipEntity> friendshipEntities);
 
-    List<FriendshipEntity> friendshipsToEntities(List<Friendship> friendships);
-
 }

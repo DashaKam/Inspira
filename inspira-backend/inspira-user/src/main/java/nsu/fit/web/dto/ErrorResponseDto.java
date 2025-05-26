@@ -2,7 +2,6 @@ package nsu.fit.web.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import nsu.fit.exception.ErrorType;
 
 @Data
 @Builder

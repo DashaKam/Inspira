@@ -6,8 +6,6 @@ import nsu.fit.messaging.user.dto.UserSearchFilterDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "user-service",
