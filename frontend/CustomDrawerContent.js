@@ -22,11 +22,11 @@ const CustomDrawerContent = (props) => {
       {/* Кнопки навигации */}
       <View style={styles.navigationContainer}>
         <TouchableOpacity 
-          onPress={() => props.navigation.navigate('SearchFriends')}
+          onPress={() => props.navigation.navigate('Friends')}
           style={styles.button}
         >
           <Icon name="search" size={20} color="#000" style={styles.icon} />
-          <Text style={styles.buttonText}>Поиск друзей</Text>
+          <Text style={styles.buttonText}>Друзья</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 

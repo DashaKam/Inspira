@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation }) => {
 
   try {
     const response = await axios.post(
-      'http://185.157.214.169:8080/api/login', // URL для входа
+      'http://185.157.214.169:8080/api/users/login', // URL для входа
       {
         nickname: nickname,
         password: password,
@@ -62,19 +62,6 @@ const LoginScreen = ({ navigation }) => {
   }
 };
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardVisible(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardVisible(false);
-    });
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   return (
     <ImageBackground

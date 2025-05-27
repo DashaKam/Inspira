@@ -7,6 +7,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen'; // Ваш основной экран
 import CustomDrawerContent from './CustomDrawerContent'; // Компонент для кастомного меню
 import SendWishScreen from './SendWishScreen';
+import MyFriends from './MyFriends';
+import AddFriends from './AddFriendScreen';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -18,7 +20,8 @@ const App = () => {
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name="Success" component={SuccessScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name="Wish" component={SendWishScreen} options={{ headerShown: false }}/>
-
+                <Stack.Screen name="Friends" component={MyFriends} options={{ headerShown: false }}/>
+                <Stack.Screen name="AddFriends" component={AddFriends} options={{ headerShown: false }}/>
                 {/* Вложенный Drawer Navigator */}
                 <Stack.Screen name="HomeDrawer" component={HomeDrawer} options={{ headerShown: false }} />
             </Stack.Navigator>
