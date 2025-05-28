@@ -28,6 +28,10 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ContextProvider contextProvider;
 
+    public User getUser() {
+        return getUserById(contextProvider.getUserId());
+    }
+
     public String loginUser(LoginRequest loginRequest) {
         User user = getUserByNickname(loginRequest.getNickname());
 

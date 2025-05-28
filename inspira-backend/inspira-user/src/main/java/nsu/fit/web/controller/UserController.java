@@ -64,6 +64,14 @@ public class UserController {
         String token = userService.loginUser(loginRequest);
         return new AuthResponseDto(token);
     }
+    @GetMapping("/user")
+    @Operation(
+            tags = "Внешние API",
+            summary = "Получение данных текущего пользователя"
+    )
+    public UserDto getUser() {
+        return userDtoMapper.userToDto(userService.getUser());
+    }
 
     @GetMapping("/search")
     @Operation(
