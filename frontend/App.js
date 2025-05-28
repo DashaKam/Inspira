@@ -9,6 +9,8 @@ import CustomDrawerContent from './CustomDrawerContent'; // Компонент �
 import SendWishScreen from './SendWishScreen';
 import MyFriends from './MyFriends';
 import AddFriends from './AddFriendScreen';
+import ChangePassword from './ChangePasswordScreen';
+import SettingsScreen from './SettingsScreen';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -22,7 +24,9 @@ const App = () => {
                 <Stack.Screen name="Wish" component={SendWishScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name="Friends" component={MyFriends} options={{ headerShown: false }}/>
                 <Stack.Screen name="AddFriends" component={AddFriends} options={{ headerShown: false }}/>
-                {/* Вложенный Drawer Navigator */}
+                <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+
+                <Stack.Screen name="ChangePassword" component={ChangePassword} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeDrawer" component={HomeDrawer} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>

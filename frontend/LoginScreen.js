@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, SafeAreaView, StyleSheet, TextInput, Alert, ImageBackground, View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
-import axios from 'axios'; 
-
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const LoginScreen = ({ navigation }) => {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
@@ -29,8 +29,11 @@ const LoginScreen = ({ navigation }) => {
 
     const data = response.data; // Получаем данные из ответа
     console.log('Вход успешен:', data);
- 
-    
+
+    // Сохраняем токен в AsyncStorage
+    await AsyncStorage.setItem('userToken', data.token);
+
+    console.log('Токен сохранён в AsyncStorage:', data.token);
     navigation.navigate('HomeDrawer'); 
 
   } catch (error) {
